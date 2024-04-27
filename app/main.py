@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 
+from app.database.db_init import create_db_tables
+
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.on_event("startup")
+async def on_startup():
+    await create_db_tables()
