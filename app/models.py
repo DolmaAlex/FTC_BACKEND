@@ -12,7 +12,6 @@ class User(Base):
     balance: Mapped[float] = mapped_column()
     league: Mapped[str] = mapped_column()
     experience: Mapped[int] = mapped_column()
-    admin: Mapped[bool] = mapped_column()
     referral_link: Mapped[str] = mapped_column(String, nullable=True)
 
 

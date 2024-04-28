@@ -8,7 +8,6 @@ class UserBase(BaseModel):
     balance: float
     league: str
     experience: int
-    admin: bool
 
 
 class UserCreate(UserBase):
