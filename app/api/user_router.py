@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..database.db_init import get_db_session
 from ..repositories.repositories import UserRepository
-from ..schemas import UserCreate, User
+from ..schemas import UserCreate, User, UserUpdate
 
 router = APIRouter()
 
@@ -25,11 +25,10 @@ async def read_user(user_id: int, db: AsyncSession = Depends(get_db_session)):
 
 
 @router.put("/users/{user_id}", response_model=User)
-async def update_user(user_id: int, user_update: UserCreate, db: AsyncSession = Depends(get_db_session)):
+async def update_user(user_id: int, user_update: UserUpdate, db: AsyncSession = Depends(get_db_session)):
     user_repo = UserRepository(db)
-    user = await user_repo.update_user(user_id, user_update.dict())
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+    update_data = user_update.dict(exclude_none=True)  # exclude_none=True исключит поля со значением None
+    user = await user_repo.update_user(user_id, update_data)
     return user
 
 

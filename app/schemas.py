@@ -14,6 +14,15 @@ class UserCreate(UserBase):
     pass
 
 
+class UserUpdate(BaseModel):
+    telegram_id: int | None = None
+    telegram_username: str | None = None
+    balance: float | None = None
+    league: str | None = None
+    experience: int | None = None
+    referral_link: str | None = None
+
+
 class User(UserBase):
     id: int
 
