@@ -3,7 +3,6 @@ from datetime import datetime
 
 
 class UserBase(BaseModel):
-    id: int
     telegram_id: int
     telegram_username: str
     balance: float

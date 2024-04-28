@@ -13,7 +13,7 @@ class User(Base):
     league: Mapped[str] = mapped_column()
     experience: Mapped[int] = mapped_column()
     admin: Mapped[bool] = mapped_column()
-    referral_link: Mapped[str] = mapped_column()
+    referral_link: Mapped[str] = mapped_column(String, nullable=True)
 
 
 class Booster(Base):

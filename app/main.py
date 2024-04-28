@@ -10,4 +10,4 @@ async def startup_event():
     await create_db_tables()  #
 
 
-app.include_router(user_router, prefix='/users', tags=['users'])
+app.include_router(user_router, tags=['users'])
