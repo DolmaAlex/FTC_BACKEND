@@ -59,44 +59,43 @@ class UserRepository:
             except NoResultFound:
                 return None
 
-    # async def create_booster(self, booster_data: dict) -> Booster:
-    #     new_booster = Booster(**booster_data)
-    #     self.session.add(new_booster)
-    #     await self.session.commit()
-    #     await self.session.refresh(new_booster)
-    #     return new_booster
-    #
-    # async def get_booster(self, booster_id: int) -> Booster:
-    #     async with self.session.begin():
-    #         query = select(Booster).filter_by(id=booster_id)
-    #         result = await self.session.execute(query)
-    #         try:
-    #             booster = result.scalar_one()
-    #         except NoResultFound:
-    #             raise HTTPException(status_code=404, detail="Booster not found")
-    #         return booster
-    #
-    # async def update_booster(self, booster_id: int, booster_data: dict) -> Booster:
-    #     async with self.session.begin():
-    #         query = select(Booster).filter_by(id=booster_id)
-    #         result = await self.session.execute(query)
-    #         try:
-    #             booster = result.scalar_one()
-    #         except NoResultFound:
-    #             raise HTTPException(status_code=404, detail="Booster not found")
-    #         for key, value in booster_data.items():
-    #             setattr(booster, key, value)
-    #         await self.session.commit()
-    #         await self.session.refresh(booster)
-    #         return booster
-    #
-    # async def delete_booster(self, booster_id: int) -> None:
-    #     async with self.session.begin():
-    #         query = select(Booster).filter_by(id=booster_id)
-    #         result = await self.session.execute(query)
-    #         try:
-    #             booster = result.scalar_one()
-    #         except NoResultFound:
-    #             raise HTTPException(status_code=404, detail="Booster not found")
-    #         await self.session.delete(booster)
-    #         await self.session.commit()
+    async def create_booster(self, booster_data: dict) -> Booster:
+        new_booster = Booster(**booster_data)
+        self.session.add(new_booster)
+        await self.session.commit()
+        await self.session.refresh(new_booster)
+        return new_booster
+
+    async def get_booster(self, booster_id: int) -> Booster:
+        async with self.session.begin():
+            query = select(Booster).filter_by(id=booster_id)
+            result = await self.session.execute(query)
+            try:
+                booster = result.scalar_one()
+            except NoResultFound:
+                raise HTTPException(status_code=404, detail="Booster not found")
+            return booster
+
+    async def update_booster(self, booster_id: int, booster_data: dict) -> Booster:
+        async with self.session.begin():  # Автоматический коммит при выходе из контекстного менеджера
+            query = select(Booster).filter_by(id=booster_id)
+            result = await self.session.execute(query)
+            booster = result.scalars().first()
+            if not booster:
+                raise HTTPException(status_code=404, detail="Booster not found")
+            for key, value in booster_data.items():
+                setattr(booster, key, value)
+            # Не нужно явно вызывать commit, он вызовется автоматически при выходе из контекстного менеджера
+            await self.session.refresh(booster)
+            return booster
+
+    async def delete_booster(self, booster_id: int) -> None:
+        async with self.session.begin():
+            query = select(Booster).filter_by(id=booster_id)
+            result = await self.session.execute(query)
+            try:
+                booster = result.scalar_one()
+            except NoResultFound:
+                raise HTTPException(status_code=404, detail="Booster not found")
+            await self.session.delete(booster)
+            await self.session.commit()
