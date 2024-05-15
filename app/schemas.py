@@ -5,9 +5,6 @@ from datetime import datetime
 class UserBase(BaseModel):
     telegram_id: int
     telegram_username: str
-    balance: float
-    league: str
-    experience: int
 
 
 class UserCreate(UserBase):
@@ -17,10 +14,7 @@ class UserCreate(UserBase):
 class UserUpdate(BaseModel):
     telegram_id: int | None = None
     telegram_username: str | None = None
-    balance: float | None = None
-    league: str | None = None
-    experience: int | None = None
-    referral_link: str | None = None
+
 
 
 class User(UserBase):
@@ -34,32 +28,16 @@ class BoosterBase(BaseModel):
     title: str
     description: str
     price: float
-    locked: bool
 
 
 class BoosterCreate(BoosterBase):
-    pass
+    title: str
+    description: str
+    price: float
 
 
 class Booster(BoosterBase):
     id: int
-
-    class Config:
-        orm_mode = True
-
-
-class PurchaseBase(BaseModel):
-    user_id: int
-    booster_id: int
-
-
-class PurchaseCreate(PurchaseBase):
-    pass
-
-
-class Purchase(PurchaseBase):
-    id: int
-    purchase_date: datetime
 
     class Config:
         orm_mode = True
