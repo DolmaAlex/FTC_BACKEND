@@ -5,7 +5,6 @@ from sqlalchemy.exc import NoResultFound
 from app.models import User, Booster
 from sqlalchemy.orm import Session
 
-
 class UserRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -50,15 +49,6 @@ class UserRepository:
             await self.session.delete(user)
             await self.session.commit()
 
-    async def find_user_by_telegram_id(self, telegram_id: int) -> User | None:
-        async with self.session.begin():
-            query = select(User).filter_by(telegram_id=telegram_id)
-            result = await self.session.execute(query)
-            try:
-                return result.scalar_one()
-            except NoResultFound:
-                return None
-
     async def create_booster(self, booster_data: dict) -> Booster:
         new_booster = Booster(**booster_data)
         self.session.add(new_booster)
@@ -77,7 +67,7 @@ class UserRepository:
             return booster
 
     async def update_booster(self, booster_id: int, booster_data: dict) -> Booster:
-        async with self.session.begin():  # Автоматический коммит при выходе из контекстного менеджера
+        async with self.session.begin():
             query = select(Booster).filter_by(id=booster_id)
             result = await self.session.execute(query)
             booster = result.scalars().first()
@@ -85,7 +75,6 @@ class UserRepository:
                 raise HTTPException(status_code=404, detail="Booster not found")
             for key, value in booster_data.items():
                 setattr(booster, key, value)
-            # Не нужно явно вызывать commit, он вызовется автоматически при выходе из контекстного менеджера
             await self.session.refresh(booster)
             return booster
 
