@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi import HTTPException
@@ -77,14 +79,3 @@ class UserRepository:
                 setattr(booster, key, value)
             await self.session.refresh(booster)
             return booster
-
-    async def delete_booster(self, booster_id: int) -> None:
-        async with self.session.begin():
-            query = select(Booster).filter_by(id=booster_id)
-            result = await self.session.execute(query)
-            try:
-                booster = result.scalar_one()
-            except NoResultFound:
-                raise HTTPException(status_code=404, detail="Booster not found")
-            await self.session.delete(booster)
-            await self.session.commit()

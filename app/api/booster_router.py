@@ -26,8 +26,8 @@ async def update_booster(booster_id: int, booster: BoosterCreate, db: AsyncSessi
     return await user_repo.update_booster(booster_id, booster.dict())
 
 
-@router.delete("/boosters/{booster_id}")
-async def delete_booster(booster_id: int, db: AsyncSession = Depends(get_db_session)):
-    user_repo = UserRepository(db)
-    await user_repo.delete_booster(booster_id)
-    return {"message": "Booster deleted"}
+@router.post("/boosters/{booster_id}/purchase")
+async def buy_booster(booster_id: int, user_id: int, db: AsyncSession = Depends(get_db_session)):
+    repo = UserRepository(db)
+    purchase = await repo.purchase_booster(user_id, booster_id)
+    return purchase
