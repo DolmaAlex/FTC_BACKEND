@@ -2,12 +2,12 @@ from fastapi import FastAPI
 from sqladmin import Admin, ModelView
 from sqlalchemy.ext.declarative import declarative_base
 
-from .admin_auth import AdminAuth
-from .database.db_init import engine, create_db_tables
-from .models import User, Booster, Task
-from .api.user_router import router as user_router
-from .api.booster_router import router as booster_router
-from .api.task_router import router as task_router
+from app.admin_auth import AdminAuth
+from app.database.db_init import engine, create_db_tables
+from app.models import User, Booster, Task
+from app.api.user_router import router as user_router
+from app.api.booster_router import router as booster_router
+from app.api.task_router import router as task_router
 
 app = FastAPI(title="Your Project Title")
 
