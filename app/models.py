@@ -22,14 +22,14 @@ class Booster(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column()
     description: Mapped[str] = mapped_column()
-    price: Mapped[float] = mapped_column()
+    price: Mapped[int] = mapped_column()
 
 
 class Task(Base):
     __tablename__ = "tasks"
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column()
-    price: Mapped[float] = mapped_column()
+    price: Mapped[int] = mapped_column()
 
 
 class Admin(Base):

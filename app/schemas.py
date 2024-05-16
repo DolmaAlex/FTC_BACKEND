@@ -35,13 +35,12 @@ class User(UserBase):
 class BoosterBase(BaseModel):
     title: str
     description: str
-    price: float
-
+    price: int
 
 class BoosterCreate(BoosterBase):
     title: str
     description: str
-    price: float
+    price: int
 
 
 class Booster(BoosterBase):
@@ -55,12 +54,12 @@ class Booster(BoosterBase):
 class TaskBase(BaseModel):
     title: str
     description: str
-    price: float
+    price: int
 
 
 class TaskCreate(TaskBase):
     title: str
-    price: float
+    price: int
 
 
 class Task(TaskBase):
