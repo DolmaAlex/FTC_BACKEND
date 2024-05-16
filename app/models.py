@@ -32,3 +32,9 @@ class Task(Base):
     description: Mapped[str] = mapped_column()
     price: Mapped[float] = mapped_column()
 
+
+class Admin(Base):
+    __tablename__ = "admins"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    login: Mapped[str] = mapped_column()
+    password: Mapped[str] = mapped_column()

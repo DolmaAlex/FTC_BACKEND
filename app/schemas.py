@@ -70,3 +70,10 @@ class Task(TaskBase):
 
     class Config:
         orm_mode = True
+
+
+class Admin(BaseModel):
+    login: str
+    password: str
+    class Config:
+        orm_mode = True

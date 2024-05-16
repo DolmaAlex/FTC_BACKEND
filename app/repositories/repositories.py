@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi import HTTPException
 from sqlalchemy.exc import NoResultFound
-from app.models import User, Booster, Task
+from app.models import User, Booster, Task, Admin
 from sqlalchemy.orm import Session
 
 class UserRepository:
@@ -120,3 +120,5 @@ class UserRepository:
                 raise HTTPException(status_code=404, detail="Task not found")
             await self.session.delete(task)
             await self.session.commit()
+
+

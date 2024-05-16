@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from sqladmin import Admin, ModelView
 from sqlalchemy.ext.declarative import declarative_base
+
+from .admin_auth import AdminAuth
 from .database.db_init import engine, create_db_tables
 from .models import User, Booster, Task
 from .api.user_router import router as user_router
@@ -9,7 +11,8 @@ from .api.task_router import router as task_router
 
 app = FastAPI(title="Your Project Title")
 
-admin = Admin(app, engine)
+authentication_backend = AdminAuth(secret_key="verysecretkey")
+admin = Admin(app, engine, authentication_backend=authentication_backend)
 
 
 class UserAdmin(ModelView, model=User):
@@ -30,8 +33,8 @@ admin.add_view(TaskAdmin)
 
 
 @app.on_event("startup")
-def startup_event():
-    create_db_tables()  # Это вызовет создание таблиц на старте приложения
+async def startup_event():
+   await create_db_tables()  # Это вызовет создание таблиц на старте приложения
 
 
 app.include_router(user_router, prefix="/users", tags=["users"])
