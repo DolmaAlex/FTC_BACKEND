@@ -60,7 +60,6 @@ class TaskBase(BaseModel):
 
 class TaskCreate(TaskBase):
     title: str
-    description: str
     price: float
 
 
