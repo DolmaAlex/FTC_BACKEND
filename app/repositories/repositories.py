@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi import HTTPException
 from sqlalchemy.exc import NoResultFound
-from app.models import User, Booster
+from app.models import User, Booster, Task
 from sqlalchemy.orm import Session
 
 class UserRepository:
@@ -79,3 +79,44 @@ class UserRepository:
                 setattr(booster, key, value)
             await self.session.refresh(booster)
             return booster
+
+
+    async def create_task(self, task_data: dict) -> Task:
+        new_task = Task(**task_data)
+        self.session.add(new_task)
+        await self.session.commit()
+        await self.session.refresh(new_task)
+        return new_task
+
+    async def get_task(self, task_id: int) -> Task:
+        async with self.session.begin():
+            query = select(Task).filter_by(id=task_id)
+            result = await self.session.execute(query)
+            try:
+                task = result.scalar_one()
+            except NoResultFound:
+                raise HTTPException(status_code=404, detail="Task not found")
+            return task
+
+    async def update_task(self, task_id: int, task_data: dict) -> Task:
+        async with self.session.begin():
+            query = select(Task).filter_by(id=task_id)
+            result = await self.session.execute(query)
+            task = result.scalars().first()
+            if not task:
+                raise HTTPException(status_code=404, detail="Task not found")
+            for key, value in task_data.items():
+                setattr(task, key, value)
+            await self.session.refresh(task)
+            return task
+
+    async def delete_task(self, task_id: int) -> None:
+        async with self.session.begin():
+            query = select(Task).filter_by(id=task_id)
+            result = await self.session.execute(query)
+            try:
+                task = result.scalar_one()
+            except NoResultFound:
+                raise HTTPException(status_code=404, detail="Task not found")
+            await self.session.delete(task)
+            await self.session.commit()

@@ -32,13 +32,13 @@ async def update_user(user_id: int, user_update: UserUpdate, db: AsyncSession = 
     return user
 
 
-<<<<<<< HEAD
+
 @router.delete("/users/{user_id}")
 async def delete_user(user_id: int, db: AsyncSession = Depends(get_db_session)):
     user_repo = UserRepository(db)
     await user_repo.delete_user(user_id)
     return {"message": "User deleted"}
-=======
+
 @router.get("/users/telegram/{telegram_id}")
 async def find_user_by_telegram_id(telegram_id: int, db: AsyncSession = Depends(get_db_session)):
     user_repo = UserRepository(db)
@@ -46,4 +46,4 @@ async def find_user_by_telegram_id(telegram_id: int, db: AsyncSession = Depends(
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
->>>>>>> 97c4499afa221f6d85aa424ef6da47003fc496ef
+

@@ -1,15 +1,39 @@
 from fastapi import FastAPI
+from sqladmin import Admin, ModelView
+from sqlalchemy.ext.declarative import declarative_base
+from .database.db_init import engine, create_db_tables
+from .models import User, Booster, Task
 from .api.user_router import router as user_router
 from .api.booster_router import router as booster_router
-from .database.db_init import create_db_tables
+from .api.task_router import router as task_router
 
-app = FastAPI()
+app = FastAPI(title="Your Project Title")
+
+admin = Admin(app, engine)
+
+
+class UserAdmin(ModelView, model=User):
+    column_list = ["id", "telegram_id", "telegram_username", "balance", "league"]
+
+
+class BoosterAdmin(ModelView, model=Booster):
+    column_list = ["id", "title", "description", "price"]
+
+
+class TaskAdmin(ModelView, model=Task):
+    column_list = ["id", "title", "description", "price"]
+
+
+admin.add_view(UserAdmin)
+admin.add_view(BoosterAdmin)
+admin.add_view(TaskAdmin)
 
 
 @app.on_event("startup")
-async def startup_event():
-    await create_db_tables()  #
+def startup_event():
+    create_db_tables()  # Это вызовет создание таблиц на старте приложения
 
 
-app.include_router(user_router, tags=['users'])
-app.include_router(booster_router, tags=["boosters"])
+app.include_router(user_router, prefix="/users", tags=["users"])
+app.include_router(booster_router, prefix="/boosters", tags=["boosters"])
+app.include_router(task_router, prefix="/tasks", tags=["tasks"])

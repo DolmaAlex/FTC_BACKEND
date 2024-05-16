@@ -26,8 +26,3 @@ async def update_booster(booster_id: int, booster: BoosterCreate, db: AsyncSessi
     return await user_repo.update_booster(booster_id, booster.dict())
 
 
-@router.post("/boosters/{booster_id}/purchase")
-async def buy_booster(booster_id: int, user_id: int, db: AsyncSession = Depends(get_db_session)):
-    repo = UserRepository(db)
-    purchase = await repo.purchase_booster(user_id, booster_id)
-    return purchase
