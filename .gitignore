@@ -140,5 +140,5 @@ cython_debug/
 # JupyterLab
 .jupyterlab-debug.log
 
-database.db
+
 .gitignore

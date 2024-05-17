@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from sqladmin import Admin, ModelView
 from sqlalchemy.ext.declarative import declarative_base
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.admin_auth import AdminAuth
 from app.database.db_init import engine, create_db_tables
@@ -30,6 +31,18 @@ class TaskAdmin(ModelView, model=Task):
 admin.add_view(UserAdmin)
 admin.add_view(BoosterAdmin)
 admin.add_view(TaskAdmin)
+
+origins = [
+    "https://firsttapbeta.web.app",  # Только URL вашего приложения на Firebase
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.on_event("startup")
