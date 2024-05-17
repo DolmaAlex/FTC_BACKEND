@@ -51,6 +51,14 @@ class UserRepository:
             await self.session.delete(user)
             await self.session.commit()
 
+    async def find_user_by_telegram_id(self, telegram_id: int) -> User:
+        query = select(User).filter_by(telegram_id=telegram_id)
+        result = await self.session.execute(query)
+        user = result.scalars().first()
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user
+
     async def create_booster(self, booster_data: dict) -> Booster:
         new_booster = Booster(**booster_data)
         self.session.add(new_booster)
