@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..database.db_init import get_db_session
 from ..repositories.repositories import UserRepository
 from ..schemas import BoosterCreate, Booster
+from typing import List
 
 router = APIRouter()
 
@@ -26,3 +27,7 @@ async def update_booster(booster_id: int, booster: BoosterCreate, db: AsyncSessi
     return await user_repo.update_booster(booster_id, booster.dict())
 
 
+@router.get("/boosters/", response_model=List[Booster])
+async def get_all_boosters(db: AsyncSession = Depends(get_db_session)):
+    user_repo = UserRepository(db)
+    return await user_repo.get_all_boosters()

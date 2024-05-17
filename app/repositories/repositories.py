@@ -1,4 +1,5 @@
 import datetime
+from typing import Sequence
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -88,6 +89,12 @@ class UserRepository:
             await self.session.refresh(booster)
             return booster
 
+    async def get_all_boosters(self) -> Sequence[Booster]:
+        async with self.session.begin():
+            query = select(Booster)
+            result = await self.session.execute(query)
+            boosters = result.scalars().all()
+            return boosters
 
     async def create_task(self, task_data: dict) -> Task:
         new_task = Task(**task_data)
