@@ -35,12 +35,12 @@ class User(UserBase):
 class BoosterBase(BaseModel):
     title: str
     description: str
-    price: int
+    cost: int
 
 class BoosterCreate(BoosterBase):
     title: str
     description: str
-    price: int
+    cost: int
 
 
 class Booster(BoosterBase):
