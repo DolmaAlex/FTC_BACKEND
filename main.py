@@ -44,10 +44,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
- # Это вызовет создание таблиц на старте приложения
-
-
-app.include_router(user_router, prefix="/users", tags=["users"])
-app.include_router(booster_router, prefix="/boosters", tags=["boosters"])
-app.include_router(task_router, prefix="/tasks", tags=["tasks"])
+app.include_router(user_router, tags=["users"])
+app.include_router(booster_router, tags=["boosters"])
+app.include_router(task_router, tags=["tasks"])
