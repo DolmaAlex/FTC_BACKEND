@@ -11,7 +11,8 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     telegram_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     telegram_username: Mapped[str] = mapped_column(String)
-
+    telegram_firstame: Mapped[str] = mapped_column (String)
+    photo_url: Mapped[str] = mapped_column(String)
     balance: Mapped[float] = mapped_column()
     league: Mapped[str] = mapped_column()
 
