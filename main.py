@@ -45,9 +45,7 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-async def startup_event():
-   await create_db_tables()  # Это вызовет создание таблиц на старте приложения
+ # Это вызовет создание таблиц на старте приложения
 
 
 app.include_router(user_router, prefix="/users", tags=["users"])
