@@ -1,11 +1,11 @@
-
 from fastapi import Request, HTTPException
 from hashlib import sha256
-from hmac import compare_digest
+from hmac import new, compare_digest
 import logging
-from config import TELEGRAM_TOKEN  # Это ваш токен бота от BotFather
+from config import TELEGRAM_SECRET_KEY  # Импорт токена из файла конфигурации
 
 logging.basicConfig(level=logging.INFO)
+
 
 async def telegram_auth_middleware(request: Request, call_next):
     if request.method == "OPTIONS":
@@ -27,10 +27,10 @@ async def telegram_auth_middleware(request: Request, call_next):
             data_check_string = "\n".join(data_check_arr)
 
             # Создаем секретный хеш-ключ из токена бота
-            secret_key = sha256(TELEGRAM_TOKEN.encode('utf-8')).digest()
+            secret_key = sha256(TELEGRAM_SECRET_KEY.encode('utf-8')).digest()
 
             # Вычисляем HMAC шифрование данных
-            hmac_digest = hmac.new(secret_key, msg=data_check_string.encode('utf-8'), digestmod=sha256).hexdigest()
+            hmac_digest = new(secret_key, msg=data_check_string.encode('utf-8'), digestmod=sha256).hexdigest()
 
             # Сравниваем наш вычисленный хеш с переданным от Telegram
             if not compare_digest(hmac_digest, telegram_hash):
