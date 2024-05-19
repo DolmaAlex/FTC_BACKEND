@@ -9,8 +9,12 @@ from app.models import User, Booster, Task
 from app.api.user_router import router as user_router
 from app.api.booster_router import router as booster_router
 from app.api.task_router import router as task_router
+from app.middlewares import telegram_auth_middleware
 
 app = FastAPI(title="Your Project Title")
+
+
+
 
 authentication_backend = AdminAuth(secret_key="verysecretkey")
 admin = Admin(app, engine, authentication_backend=authentication_backend)
@@ -43,6 +47,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(telegram_auth_middleware)
+
 
 app.include_router(user_router, tags=["users"])
 app.include_router(booster_router, tags=["boosters"])
