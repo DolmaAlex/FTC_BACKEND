@@ -15,9 +15,6 @@ from app.api.task_router import router as task_router
 app = FastAPI(title="Your Project Title")
 
 
-class TelegramAuthMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        return await telegram_auth_middleware(request, call_next)
 
 
 authentication_backend = AdminAuth(secret_key="verysecretkey")
