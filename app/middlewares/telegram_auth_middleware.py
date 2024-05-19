@@ -8,7 +8,10 @@ from config import TELEGRAM_SECRET_KEY
 
 
 async def telegram_auth_middleware(request: Request, call_next):
-    # Фильтр запросов только для эндпоинта авторизации Telegram
+    # Метод OPTIONS обрабатывается CORS middleware, поэтому пропускаем его
+    if request.method == "OPTIONS":
+        return await call_next(request)
+
     if '/auth/telegram' in str(request.url):
         telegram_data = request.query_params
         telegram_hash = telegram_data.get('hash')
