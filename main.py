@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from sqladmin import Admin, ModelView
 from sqlalchemy.ext.declarative import declarative_base
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.admin_auth import AdminAuth
 from app.database.db_init import engine, create_db_tables
@@ -9,11 +10,14 @@ from app.models import User, Booster, Task
 from app.api.user_router import router as user_router
 from app.api.booster_router import router as booster_router
 from app.api.task_router import router as task_router
-from app.middlewares import telegram_auth_middleware
+from app.middlewares.telegram_auth_middleware import telegram_auth_middleware
 
 app = FastAPI(title="Your Project Title")
 
 
+class TelegramAuthMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        return await telegram_auth_middleware(request, call_next)
 
 
 authentication_backend = AdminAuth(secret_key="verysecretkey")
@@ -25,7 +29,7 @@ class UserAdmin(ModelView, model=User):
 
 
 class BoosterAdmin(ModelView, model=Booster):
-    column_list = ["id", "title", "description", "price"]
+    column_list = ["id", "title", "description", "cost"]
 
 
 class TaskAdmin(ModelView, model=Task):
@@ -36,10 +40,7 @@ admin.add_view(UserAdmin)
 admin.add_view(BoosterAdmin)
 admin.add_view(TaskAdmin)
 
-origins = [
-    "https://firsttapbeta.web.app",  # Только URL вашего приложения на Firebase
-]
-
+origins = ["https://firsttapbeta.web.app"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -48,9 +49,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.add_middleware(telegram_auth_middleware)
+# Добавляем созданный класс middleware
+app.add_middleware(TelegramAuthMiddleware)
 
-
+# Включение роутеров
 app.include_router(user_router, tags=["users"])
 app.include_router(booster_router, tags=["boosters"])
 app.include_router(task_router, tags=["tasks"])
