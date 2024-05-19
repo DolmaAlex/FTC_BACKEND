@@ -10,7 +10,7 @@ from app.models import User, Booster, Task
 from app.api.user_router import router as user_router
 from app.api.booster_router import router as booster_router
 from app.api.task_router import router as task_router
-from app.middlewares.telegram_auth_middleware import telegram_auth_middleware
+
 
 app = FastAPI(title="Your Project Title")
 
@@ -50,7 +50,7 @@ app.add_middleware(
 )
 
 # Добавляем созданный класс middleware
-app.add_middleware(TelegramAuthMiddleware)
+
 
 # Включение роутеров
 app.include_router(user_router, tags=["users"])
