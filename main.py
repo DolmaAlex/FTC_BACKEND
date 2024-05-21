@@ -37,7 +37,7 @@ admin.add_view(UserAdmin)
 admin.add_view(BoosterAdmin)
 admin.add_view(TaskAdmin)
 
-origins = ["https://firsttapbeta.web.app"]
+origins = ["https://firsttapbeta.web.app", "https://ftc-coin-bot.onrender.com"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
