@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi import HTTPException
 from sqlalchemy.exc import NoResultFound
-from app.models import User, Booster, Task, Admin
+from app.models import User, Booster, Task, Admin, GameState
 from sqlalchemy.orm import Session
 
 class UserRepository:
@@ -59,6 +59,25 @@ class UserRepository:
         if user is None:
             raise HTTPException(status_code=404, detail="User not found")
         return user
+
+    async def save_game_state(self, user_id: int, state_data: str) -> None:
+        query = select(User).filter(User.telegram_id == user_id)
+        user = await self.session.execute(query)
+        user = user.scalars().first()
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+        # Здесь происходит сохранение или обновление состояния игры пользователя
+        state = GameState(user_id=user.telegram_id, state_data=state_data)
+        self.session.add(state)
+        await self.session.commit()
+
+    async def load_game_state(self, user_id: int) -> str:
+        query = select(GameState).filter(GameState.user_id == user_id)
+        state = await self.session.execute(query)
+        state = state.scalars().first()
+        if state is None:
+            raise HTTPException(status_code=404, detail="Game state not found")
+        return state.state_data
 
     async def create_booster(self, booster_data: dict) -> Booster:
         new_booster = Booster(**booster_data)
