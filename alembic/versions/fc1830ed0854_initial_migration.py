@@ -50,6 +50,15 @@ def upgrade() -> None:
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('telegram_id')
     )
+    op.create_table('game_states',
+                    sa.Column('id', sa.Integer(), nullable=False),
+                    sa.Column('user_id', sa.BigInteger(), nullable=False),
+                    sa.Column('state_data', sa.String(), nullable=False),
+                    sa.Column('updated_at', sa.DateTime(), nullable=False, server_default=sa.func.now()),
+                    sa.ForeignKeyConstraint(['user_id'], ['users.telegram_id'], ),
+                    sa.PrimaryKeyConstraint('id'),
+                    sa.UniqueConstraint('user_id')
+                    )
     # ### end Alembic commands ###
 
 
@@ -59,4 +68,5 @@ def downgrade() -> None:
     op.drop_table('tasks')
     op.drop_table('boosters')
     op.drop_table('admins')
+    op.drop_table('game_states')
     # ### end Alembic commands ###
