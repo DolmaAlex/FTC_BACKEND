@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from sqlalchemy.exc import NoResultFound
 from app.models import User, Booster, Task, Admin, GameState
 from sqlalchemy.orm import Session
+import json
 
 class UserRepository:
     def __init__(self, session: AsyncSession):

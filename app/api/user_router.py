@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..database.db_init import get_db_session
 from ..repositories.repositories import UserRepository
 from ..schemas import UserCreate, User, UserUpdate
+import json
 
 router = APIRouter()
 
