@@ -6,16 +6,12 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.admin_auth import AdminAuth
 from app.database.db_init import engine, create_db_tables
-from app.models import User, Booster, Task
+from app.models import User, Booster, Task, GameState
 from app.api.user_router import router as user_router
 from app.api.booster_router import router as booster_router
 from app.api.task_router import router as task_router
 
-
 app = FastAPI(title="Your Project Title")
-
-
-
 
 authentication_backend = AdminAuth(secret_key="verysecretkey")
 admin = Admin(app, engine, authentication_backend=authentication_backend)
@@ -33,9 +29,14 @@ class TaskAdmin(ModelView, model=Task):
     column_list = ["id", "title", "description", "price"]
 
 
+class GameStateAdmin(ModelView, model=GameState):
+    column_list = ["id", "user_id", "state_data", "updated_at"]
+
+
 admin.add_view(UserAdmin)
 admin.add_view(BoosterAdmin)
 admin.add_view(TaskAdmin)
+admin.add_view(GameStateAdmin)
 
 origins = ["https://firsttapbeta.web.app", "https://ftc-coin-bot.onrender.com"]
 app.add_middleware(
