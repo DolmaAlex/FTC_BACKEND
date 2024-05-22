@@ -61,14 +61,17 @@ class UserRepository:
         return user
 
     async def save_game_state(self, user_id: int, state_data: str) -> None:
-        query = select(User).filter(User.telegram_id == user_id)
-        user = await self.session.execute(query)
-        user = user.scalars().first()
-        if user is None:
-            raise HTTPException(status_code=404, detail="User not found")
-        # Здесь происходит сохранение или обновление состояния игры пользователя
-        state = GameState(user_id=user.telegram_id, state_data=state_data)
-        self.session.add(state)
+        query = select(GameState).filter(GameState.user_id == user_id)
+        result = await self.session.execute(query)
+        game_state = result.scalars().first()
+
+        if game_state is None:
+            # Если состояние игры отсутствует, создаем новую запись
+            game_state = GameState(user_id=user_id)
+            self.session.add(game_state)
+
+        # Обновляем данные состояния игры
+        game_state.state_data = state_data
         await self.session.commit()
 
     async def load_game_state(self, user_id: int) -> str:

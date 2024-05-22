@@ -49,9 +49,11 @@ async def find_user_by_telegram_id(telegram_id: int, db: AsyncSession = Depends(
 
 
 @router.post("/users/{user_id}/game_state")
-async def save_game_state(user_id: int, state_data: str, db: AsyncSession = Depends(get_db_session)):
+async def save_game_state(user_id: int, state_data: dict = Body(...), db: AsyncSession = Depends(get_db_session)):
     user_repo = UserRepository(db)
-    await user_repo.save_game_state(user_id, state_data)
+    # Конвертируем словарь обратно в строку JSON для сохранения в базе данных
+    json_state_data = json.dumps(state_data)
+    await user_repo.save_game_state(user_id, json_state_data)
     return {"message": "Game state saved successfully"}
 
 
